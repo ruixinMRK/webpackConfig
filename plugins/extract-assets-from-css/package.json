@@ -1,0 +1,20 @@
+{
+  "author": {
+    "name": "ruixin"
+  },
+  "dependencies": {
+    "loader-utils": "^1.1.0"
+  },
+  "description": "Extract assets from bundle into a index.html or index.php",
+  "devDependencies": {
+  },
+  "main": "index.5.0.js",
+  "maintainers": [
+    {
+      "name": "ruixin",
+      "email": "maruokun@aliyun.com"
+    }
+  ],
+  "name": "extract-assets-from-css",
+  "version": "1.0.0"
+}
