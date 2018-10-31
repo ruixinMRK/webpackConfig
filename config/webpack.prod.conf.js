@@ -27,7 +27,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         umdNamedDefine: true
 	},
 	externals:{
-		"babel-polyfill":{
+		"@babel/polyfill":{
 			root: 'BabelPolyfill',
 			commonjs: 'babel-polyfill',
 			commonjs2: 'babel-polyfill',
@@ -94,12 +94,12 @@ var webpackConfig = merge(baseWebpackConfig, {
         }),
         //運用此插件后postcss的自动加css的前缀失效，应该与mini-css-extract-plugin有关 
         //因为此插件为压缩cssde 作用但是mini-css-extract-plugin也有此功能，故暂时关闭此插件
-        // new OptimizeCssAssetsPlugin({
-        //     assetNameRegExp: /\.css(\?\w+)?$/g,
-        //     cssProcessor: require('cssnano'),
-        //     cssProcessorOptions: { discardComments: { removeAll: true },safe: true/* 避免打包后修改z-index的问题 */ },
-        //     canPrint: true
-        // }),
+        new OptimizeCssAssetsPlugin({
+            assetNameRegExp: /\.css(\?\w+)?$/g,
+            cssProcessor: require('cssnano'),
+            cssProcessorOptions: { discardComments: { removeAll: true },safe: true/* 避免打包后修改z-index的问题 */ },
+            canPrint: true
+        }),
 
         new ExtractAssetsFromIndex({
             cssHashLength:8,
