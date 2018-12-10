@@ -1,20 +1,20 @@
-const path = require('path')
+/* eslint-disable */
+const path = require('path');
 const webpack = require('webpack');
-const os = require("os");
+const os = require('os');
 const {
 	VueLoaderPlugin
 } = require('vue-loader');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const autoprefixer = require('autoprefixer')({
 	browsers: ['iOS >= 7', 'Android >= 4.1']
-})
-const configs = require('./base')
-const HappyPack = require('happypack'); //多线程打包
+});
+const configs = require('./base');
+// const HappyPack = require('happypack'); //多线程打包
+const cssExport = require('./export.css.js');
 
-
-const happyThreadPool = HappyPack.ThreadPool({
-	size: os.cpus().length
-}); //共享池
+// const happyThreadPool = HappyPack.ThreadPool({
+// 	size: os.cpus().length
+// }); //共享池
 
 let jsName = 'js/[name].js';
 let publicPath = configs.devServerPath;
@@ -27,20 +27,20 @@ let publicPath = configs.devServerPath;
 module.exports = {
 	target: 'web',
 	entry: {
-		"main": "./src/main.js" /* ,verdor:["vue","vuex","vue-router","babel-polyfill"] */
+		'main': './src/main.js' /* ,verdor:['vue','vuex','vue-router','babel-polyfill'] */
 	},
 	output: {
 		filename: jsName,
-		path: path.resolve(__dirname, "../", `${configs.dest}static`),
+		path: path.resolve(__dirname, '../', `${configs.dest}static`),
 		publicPath,
 		chunkFilename: 'js/async/[name].js',
-		// crossOriginLoading:configs.anomaly ? "crossOrigin" : ""  //是否启用 crossOrigin 加载script标签用于捕捉错误
+		// crossOriginLoading:configs.anomaly ? 'crossOrigin' : ''  //是否启用 crossOrigin 加载script标签用于捕捉错误
 	},
 	resolve: {
 		alias: {
 			'vue$': 'vue/dist/vue.esm.js',
-			'configs$': path.resolve(__dirname, "../", 'src/config/base.js'), //程序的一些基本配置
-			'src': path.resolve(__dirname, "../", 'src')
+			'configs$': path.resolve(__dirname, '../', 'src/config/base.js'), //程序的一些基本配置
+			'src': path.resolve(__dirname, '../', 'src')
 		},
 		extensions: ['.js', '.vue', '.json']
 	},
@@ -76,8 +76,8 @@ module.exports = {
 					loader: 'vue-loader',
 					options: {
 						loaders: {
-							css: [MiniCssExtractPlugin.loader, 'css-loader'],
-							less: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
+							css: cssExport({},false).css,
+							less: cssExport({},false).less
 						},
 						postcss: [autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
 					}
@@ -91,31 +91,12 @@ module.exports = {
 			{
 				test: /\.css(\?.*)?$/,
 				// use: [MiniCssExtractPlugin.loader,'happypack/loader?id=css']
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: [autoprefixer]
-						}
-					}
-				]
+				use: cssExport().css
 			},
 			{
 				test: /\.less(\?.*)?$/,
 				// use: [MiniCssExtractPlugin.loader,'happypack/loader?id=less']
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							plugins: [autoprefixer]
-						}
-					},
-					'less-loader'
-				]
+				use: cssExport().less
 
 			},
 			{
@@ -126,9 +107,9 @@ module.exports = {
 					name: function(...args) {
 						// 如果不用args出来的路径是错误的
 						//str 为全路径名字  防止引用不同目录下图片名相同,打包之后重叠的问题
-						// let path = args[0].split("\\").slice(-2,-1) + "";
-						// return "images/"+path+"/[name].[hash:8].[ext]";
-						return "images/[name].[hash:8].[ext]";
+						// let path = args[0].split('\\').slice(-2,-1) + '';
+						// return 'images/'+path+'/[name].[hash:8].[ext]';
+						return 'images/[name].[hash:8].[ext]';
 					}
 				}
 			},
@@ -169,7 +150,7 @@ module.exports = {
 		    id: 'css',
 		    loaders: [
 		        'css-loader',
-		        "postcss-loader"
+		        'postcss-loader'
 		    ],
 		    // 使用共享进程池中的子进程去处理任务
 		    threadPool: happyThreadPool,
@@ -178,7 +159,7 @@ module.exports = {
 		    id: 'less',
 		    loaders: [
 		        'css-loader',
-		        "postcss-loader",
+		        'postcss-loader',
 		        'less-loader'
 		    ],
 		    // 使用共享进程池中的子进程去处理任务
@@ -186,7 +167,7 @@ module.exports = {
 		}), */
 		new webpack.DefinePlugin({
 			'process.env.VERSION': JSON.stringify({
-				version: '2.0.' + Math.ceil(Date.now() / (1000 * 24 * 60 * 60)) + "." + ("00" + new Date().getHours()).substr(-2)
+				version: '2.0.' + Math.ceil(Date.now() / (1000 * 24 * 60 * 60)) + '.' + ('00' + new Date().getHours()).substr(-2)
 			})
 		}),
 		new VueLoaderPlugin()
