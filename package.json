@@ -4,9 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=dev  webpack-dev-server --config config/webpack.dev.conf.js",
-    "build": "webpack -p --config config/webpack.prod.conf.js",
-    "buildDev": "webpack --config config/webpack.prod.conf.js",
+    "start": "cross-env NODE_ENV=dev webpack-dev-server --config config/webpack.dev.conf.js",
+	"build": "webpack -p --config config/webpack.prod.conf.js",
+	"buildDev": "webpack --config config/webpack.prod.conf.js",
     "postbuild": "node Attachment/ClearFile.js"
   },
   "author": "ruixin",
