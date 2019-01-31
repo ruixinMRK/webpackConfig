@@ -8,6 +8,7 @@
           "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
         },
         "useBuiltIns": "entry"
+        // preset-env >7.3 新增了usage 可以针对只配置的浏览器环境且使用了最新的语法才会编译
       }
     ]
   ],
