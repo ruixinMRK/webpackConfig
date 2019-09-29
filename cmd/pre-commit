@@ -1,0 +1,110 @@
+#!/usr/env/node
+
+
+'use strict';
+let exec = require('child_process').exec;
+let fs = require('fs');
+let path = require("path");
+let config = require(path.resolve(".eslintrc.js"));
+
+
+
+let CLIEngine = require("eslint").CLIEngine;
+
+let cli = new CLIEngine(config);
+
+//存储不满足eslint的信息
+let errCached = {};
+
+
+/*
+	{
+    results: [
+			{
+				filePath: "/Users/eslint/project/myfile.js",
+				messages: [{
+					ruleId: "semi",
+					severity: 2,
+					message: "Missing semicolon.",
+					line: 1,
+					column: 13,
+					nodeType: "ExpressionStatement",
+					fix: { range: [12, 12], text: ";" }
+				}],
+				errorCount: 1,
+				warningCount: 0,
+				fixableErrorCount: 1,
+				fixableWarningCount: 0,
+				source: "\"use strict\"\n"
+			}
+		],
+		errorCount: 1,
+		warningCount: 0,
+		fixableErrorCount: 1,
+		fixableWarningCount: 0
+	}
+*/
+exec('git diff --cached --name-only --diff-filter=ACMR -- src/',(error, stdout, stderr) => {  
+	
+	//获取到修改的文件
+    if(stdout.length){
+        let allFile = stdout.split("\n");
+		allFile = allFile.filter((item)=>{
+			return /\.(js|vue)/g.test(item);
+		})
+		let report = cli.executeOnFiles(allFile);
+
+		if(Number(report.errorCount) > 0 || Number(report.warningCount) > 0){
+			for(let item of report.results){
+				let temp = errCached[item.filePath] = [];
+				if( Number(item.errorCount) > 0 || Number(item.warningCount) > 0){
+					for(let errMsg of item.messages){
+						temp.push({
+							ruleId:errMsg.ruleId,
+							message:errMsg.message,
+							line:errMsg.line,
+							column:errMsg.column
+						})
+					}
+				}
+			}
+			
+			console.log("以下文件存在问题(不满足eslint规范)\n");
+			let num = 1;
+			for(let str in errCached){
+				let temp = errCached[str];
+				if(temp.length > 0){
+					console.log(`${num++}=>${str}\n`);
+					let index = 0;
+					for(let item of temp){
+						console.log(`\t${++index}.错误为:${item.message},行:${item.line},列:${item.column},错误规则:${item.ruleId}`);
+					}
+				}
+				
+			}
+			
+			if( num > 1){
+				console.log('\n\错误太多,建议你把config下的webpack.dev.conf.js的所属自己的板块的eslint验证打开');
+				process.exit(1);
+			}
+			else{
+				console.log("牛逼验证通过了，可以上传");
+				process.exit(0);
+			}
+			
+		}else{
+			console.log("牛逼验证通过了，可以上传");
+			process.exit(0);
+		}
+		
+    }else{
+		console.log("牛逼验证通过了，可以上传")
+		process.exit(0);
+	}
+    if (error !== null) {
+        console.log('exec error: ' + error);
+		process.exit(1);
+    }
+
+});
+
