@@ -1,8 +1,5 @@
 
-
-// import './main.less';
-import React,{ConcurrentMode} from 'react';
-import ReactDOM from 'react-dom';
+import './main.less';
 /* 
 	eslint-disable
 */

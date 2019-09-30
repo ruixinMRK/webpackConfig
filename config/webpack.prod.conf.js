@@ -1,12 +1,16 @@
 
+/* eslint-disable */
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const ExtractAssetsFromIndex = require('extract-assets-from-css');
+// const ExtractAssetsFromIndex = require('extract-assets-from-css');
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');//多线程压缩js
+const PreloadWebpackPlugin = require('preload-webpack-plugin');
+// 打包完成后，以可视化的形式打开浏览器
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const path = require('path');
 
@@ -26,6 +30,7 @@ let webpackConfig = merge(baseWebpackConfig, {
 		libraryTarget: 'umd',
 		umdNamedDefine: true
 	},
+	// 第三方库不打包，采用CDN引用
 	externals:{
 		'@babel/polyfill':{
 			root: 'BabelPolyfill',
@@ -81,7 +86,7 @@ let webpackConfig = merge(baseWebpackConfig, {
 			// return chunk.modules.map(m => path.relative(m.context, m.request)).join("_");
 		}),
 		new HtmlWebpackPlugin({
-			template: path.resolve(__dirname, '../','src/template/index.html'),
+			template: path.resolve(__dirname, '../','config/index.html'),
 			filename: path.resolve(__dirname,'../', `${configs.dest}static/index.html`),
 			title: configs.title,
 			chunks: ['verdor','manifest', 'main'], //指定index页面需要的模块,
@@ -100,13 +105,20 @@ let webpackConfig = merge(baseWebpackConfig, {
 			cssProcessorOptions: { discardComments: { removeAll: true },safe: true/* 避免打包后修改z-index的问题 */ },
 			canPrint: true
 		}),
-
-		new ExtractAssetsFromIndex({
-			cssHashLength:8,
-			styleName:'style2js',
-			crossOrigin:configs.anomaly,
-			publicPath:configs.publicPath
-		})
+		new PreloadWebpackPlugin({
+			rel: "prefetch",
+			as: 'script',
+				//包含了哪些chunk,默认值为"asyncChunks"
+				include: 'asyncChunks'
+			}),
+		new webpack.BannerPlugin('打包日期: '+ new Date()),
+		new BundleAnalyzerPlugin()
+		// new ExtractAssetsFromIndex({
+		// 	cssHashLength:8,
+		// 	styleName:'style2js',
+		// 	crossOrigin:configs.anomaly,
+		// 	publicPath:configs.publicPath
+		// })
 
 	]
 

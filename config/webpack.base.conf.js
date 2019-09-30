@@ -5,7 +5,6 @@ const os = require('os');
 const {
 	VueLoaderPlugin
 } = require('vue-loader');
-const autoprefixer = require('autoprefixer')({});
 const configs = require('./base');
 // const HappyPack = require('happypack'); //多线程打包
 const cssExport = require('./export.css.js');
@@ -50,10 +49,32 @@ module.exports = {
 		// modules:[] // 告诉 webpack 解析模块时应该搜索的目录
 
 	},
+
+	// cacheGroups 自定义配置主要使用它来决定生成的文件
+	// test 限制范围，可以是正则，匹配文件夹或文件
+	// name 生成文件名
+	// priority 优先级，多个分组冲突时决定把代码放在哪块
+	// minSize 最小尺寸必须大于此值，默认30000B
+	// minChunks 其他entry引用次数大于此值，默认1(minChunks指的是被不同entry引入的次数)
+	// 		为1时，适合分离 node_moudles 里的第三方库（很多人认为这个值设成2其实不合理）
+	// maxInitialRequests entry文件请求的chunks不应该超过此值（请求过多，耗时）
+	// maxAsyncRequests 异步请求的chunks不应该超过此值
+	// automaticNameDelimiter 自动命名连接符
+	// chunks 值为"initial", "async"（默认） 或 "all"
+	// 	initial 入口chunk，对于异步导入的文件不处理
+	// 	async 异步chunk，只对异步导入的文件处理（个人理解）
+	// 	all 全部chunk（我反正选all，不甚理解）
+
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
-
+				// 可以提取所有的css文件到一个文件里
+				styles: {            
+					name: 'styles',
+					test: /\.scss|css$/,
+					chunks: 'all',    // merge all the css chunk to one file
+					enforce: true
+				  },
 				commons: {
 					chunks: 'initial',
 					minChunks: 2,
@@ -85,7 +106,7 @@ module.exports = {
 							css: cssExport({},false).css,
 							less: cssExport({},false).less
 						},
-						postcss: [autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
+						postcss: [cssExport({},false).autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
 					}
 				}]
 			},
