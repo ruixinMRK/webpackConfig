@@ -18,7 +18,7 @@ module.exports= {
 				// //             'Edge >= 15',
 				// //           ],
 				//         },
-				'useBuiltIns': 'entry'
+				'useBuiltIns': 'usage'
 				// "entry" : 需要入口配置 babel-poly,但是会打包指定浏览器的所有不支持的新特性,不管有没有使用
 				// preset-env >7.3 新增了usage 可以针对只配置的浏览器环境且使用了最新的语法才会编译
 			}
@@ -31,6 +31,17 @@ module.exports= {
 	],
 	'plugins': [
 
+		[
+			"@babel/plugin-transform-runtime",
+			{
+			  "absoluteRuntime": false,
+			  "corejs": { version: 3, proposals: true },
+			  "helpers": true,
+			  "regenerator": true,
+			  "useESModules": false
+			}
+		  ],
+		  
 		'@babel/plugin-proposal-function-bind',
 
 		'@babel/plugin-proposal-export-default-from',

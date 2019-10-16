@@ -1,5 +1,5 @@
 
-import './main.less';
+// import './main.less';
 /* 
 	eslint-disable
 */
