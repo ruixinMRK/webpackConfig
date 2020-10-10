@@ -1,5 +1,6 @@
 
 // import './main.less';
+
 /* 
 	eslint-disable
 */
@@ -75,3 +76,13 @@ loadScript("https://img.midukanshu.com/browser/h5/library/deeplink.js","mduDeepL
 // 	<HelloMessage name="Taylor" />,
 // 	document.getElementById('app')
 // );
+
+const p = new Promise((resolve, reject) => {
+    resolve('ok123')
+  })
+  
+  p.then(resp => console.log(resp))
+var b = new Map();
+var c = new Set();
+
+var d = new Proxy({})

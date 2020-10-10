@@ -112,6 +112,7 @@ module.exports = {
 			},
 			{
 				test: /\.js(\?.*)?$/,
+				exclude: /node_modules/,
 				use: ['babel-loader']
 				// use:['happypack/loader?id=babel']
 			},

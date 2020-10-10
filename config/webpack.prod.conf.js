@@ -1,7 +1,7 @@
 
 /* eslint-disable */
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge  } = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -25,7 +25,7 @@ let webpackConfig = merge(baseWebpackConfig, {
 	output: {
 		filename: jsName,
 		path: path.resolve(__dirname,'../', `${configs.dest}static`),
-		publicPath,
+		publicPath:"./",
 		chunkFilename: 'js/async/[name].js?[chunkhash:8]',
 		libraryTarget: 'umd',
 		umdNamedDefine: true
@@ -112,7 +112,7 @@ let webpackConfig = merge(baseWebpackConfig, {
 				include: 'asyncChunks'
 			}),
 		new webpack.BannerPlugin('打包日期: '+ new Date()),
-		new BundleAnalyzerPlugin()
+		// new BundleAnalyzerPlugin()
 		// new ExtractAssetsFromIndex({
 		// 	cssHashLength:8,
 		// 	styleName:'style2js',
