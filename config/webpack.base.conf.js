@@ -23,7 +23,7 @@ let publicPath = configs.devServerPath;
 //后期优化方向
 // 单页面入口
 module.exports = {
-	target: 'web',
+	target: ['web', 'es5'],
 	entry: {
 		'main': './src/main.js'
 	},
@@ -69,12 +69,12 @@ module.exports = {
 		splitChunks: {
 			cacheGroups: {
 				// 可以提取所有的css文件到一个文件里
-				styles: {            
+				styles: {
 					name: 'styles',
 					test: /\.scss|css$/,
-					chunks: 'all',    // merge all the css chunk to one file
+					chunks: 'all', // merge all the css chunk to one file
 					enforce: true
-				  },
+				},
 				commons: {
 					chunks: 'initial',
 					minChunks: 2,
@@ -103,10 +103,10 @@ module.exports = {
 					loader: 'vue-loader',
 					options: {
 						loaders: {
-							css: cssExport({},false).css,
-							less: cssExport({},false).less
+							css: cssExport({}, false).css,
+							less: cssExport({}, false).less
 						},
-						postcss: [cssExport({},false).autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
+						postcss: [cssExport({}, false).autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
 					}
 				}]
 			},
@@ -132,7 +132,7 @@ module.exports = {
 				loader: 'url-loader',
 				options: {
 					limit: 2000,
-					name: function(...args) {
+					name: function (...args) {
 						// 如果不用args出来的路径是错误的
 						//str 为全路径名字  防止引用不同目录下图片名相同,打包之后重叠的问题
 						// let path = args[0].split('\\').slice(-2,-1) + '';

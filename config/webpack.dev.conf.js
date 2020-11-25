@@ -1,6 +1,8 @@
-
+// eslint-disable-next-line no-dupe-else-if
 const webpack = require('webpack');
-const { merge  } = require('webpack-merge');
+const {
+	merge
+} = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const configs = require('./base');
@@ -11,13 +13,13 @@ let publicPath = configs.devServerPath;
 module.exports = merge(baseWebpackConfig, {
 	mode: 'development',
 	// cheap-module-eval-source-map is faster for development
-	devtool: '#eval-source-map',
+	devtool: 'eval-source-map',
 	output: {
 		path: path.resolve(__dirname, '../'),
 	},
-	module:{
+	module: {
 		//为项目加上eslint规范检测
-		rules:[
+		rules: [
 			// {
 			//     test: /\.(js|vue)$/,
 			//     loader: 'eslint-loader',
@@ -30,10 +32,15 @@ module.exports = merge(baseWebpackConfig, {
 		]
 	},
 	plugins: [
-		new webpack.DefinePlugin({'process.env.ASSET_PATH': JSON.stringify(publicPath),'process.env.VERSION': 
-            JSON.stringify({version:'2.0.'+ Math.ceil(Date.now()/(1000*24*60*60))+ '.' + ('00'+ new Date().getHours()).substr(-2)})
+		new webpack.DefinePlugin({
+			'process.env.ASSET_PATH': JSON.stringify(publicPath),
+			'process.env.VERSION': JSON.stringify({
+				version: '2.0.' + Math.ceil(Date.now() / (1000 * 24 * 60 * 60)) + '.' + ('00' + new Date().getHours()).substr(-2)
+			})
 		}),
-		new MiniCssExtractPlugin({filename: 'css/[name].css'}),
+		new MiniCssExtractPlugin({
+			filename: 'css/[name].css'
+		}),
 		new webpack.HotModuleReplacementPlugin(),
 	],
 	watchOptions: {
@@ -41,15 +48,15 @@ module.exports = merge(baseWebpackConfig, {
 		poll: 1000,
 		ignored: /node_modules/
 	},
-	devServer:{
+	devServer: {
 		//设置服务器访问的基本目录
-		contentBase:path.resolve(__dirname, '../'),
+		contentBase: path.resolve(__dirname, '../'),
 		//服务器ip地址，localhost
-		host:'localhost',
-		port:5000,
-		open:true,//自动打开浏览器
-		hot:true,//2热更新
-		stats:'errors-only',
+		host: 'localhost',
+		port: 5000,
+		open: true, //自动打开浏览器
+		hot: true, //2热更新
+		stats: 'errors-only',
 		historyApiFallback: true,
 	},
 	// devServer: {

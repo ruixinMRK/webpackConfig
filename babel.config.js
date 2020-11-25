@@ -8,16 +8,16 @@ module.exports = {
 			{
 				'modules': false,
 				corejs: 3,
-				//         "targets": {
-				//           "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-				//           //           browsers: [
-				// //             'Chrome >= 60',
-				// //             'Safari >= 10.1',
-				// //             'iOS >= 10.3',
-				// //             'Firefox >= 54',
-				// //             'Edge >= 15',
-				// //           ],
-				//         },
+				'targets': {
+					'browsers': ['> 1%', 'last 2 versions', 'not ie <= 8']
+					//           browsers: [
+					//             'Chrome >= 60',
+					//             'Safari >= 10.1',
+					//             'iOS >= 10.3',
+					//             'Firefox >= 54',
+					//             'Edge >= 15',
+					//           ],
+				},
 				'useBuiltIns': 'usage'
 				// "entry" : 需要入口配置 import 'core-js/stable';import 'regenerator-runtime/runtime';
 				// 但是会打包指定浏览器的所有不支持的新特性,不管有没有使用

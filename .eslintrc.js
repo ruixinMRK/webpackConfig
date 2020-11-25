@@ -1,5 +1,5 @@
 module.exports = {
-    root: true, 
+    root: true,
     extends: "eslint:recommended",
     parserOptions: {
         sourceType: "module",
@@ -7,27 +7,35 @@ module.exports = {
     },
     env: {
         browser: true,
-        es6: true
+        es6: true,
+        "node": 1,
     },
     plugins: [
         "html"
     ],
     parser: "babel-eslint",
-
     rules: {
-        "indent": ["error", "tab",{"SwitchCase": 1}],
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
-        "semi": ["error", "always",{ "omitLastInOneLineBlock": true }],
-        "no-console": ["error",{allow:["log","warn"]}],
+        "indent": ["error", "tab", {
+            "SwitchCase": 1
+        }],
+        "quotes": ["error", "single", {
+            "allowTemplateLiterals": true
+        }],
+        "semi": ["error", "always", {
+            "omitLastInOneLineBlock": true
+        }],
+        "no-console": ["error", {
+            allow: ["log", "warn"]
+        }],
         "arrow-parens": 0,
-        "no-news":0,
-        "no-case-declarations":0,
-        "no-var":2,
-        "no-empty-function":2,
-        
+        "no-news": 0,
+        "no-case-declarations": 0,
+        "no-var": 2,
+        "no-empty-function": 2,
+
         // "max-depth": ["error", 4],
         "max-params": ["error", 3]
 
     }
-        
+
 }
