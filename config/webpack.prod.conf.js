@@ -25,7 +25,7 @@ let webpackConfig = merge(baseWebpackConfig, {
 	mode: 'production',
 	output: {
 		filename: jsName,
-		path: path.resolve(__dirname, '../', `${configs.dest}static`),
+		path: path.resolve(__dirname, '../', `static`),
 		publicPath: "./",
 		chunkFilename: 'js/async/[name].js?[chunkhash:8]',
 		libraryTarget: 'umd',
@@ -47,10 +47,14 @@ let webpackConfig = merge(baseWebpackConfig, {
 	module: {
 
 	},
+	optimization: {
+		chunkIds: "named",
+		// moduleIds:"deterministic"
+	},
 	devtool: configs.anomaly ? 'source-map' : false,
 	plugins: [
 		new MiniCssExtractPlugin({
-			filename: 'css/[name].css?[chunkhash:8]'
+			filename: 'css/[name].css?[contenthash:8]'
 		}),
 		/* new UglifyJsPlugin({
             cache: true,
@@ -78,19 +82,32 @@ let webpackConfig = merge(baseWebpackConfig, {
 			hashDigest: 'hex',
 			hashDigestLength: 4
 		}),
-		new webpack.ids.NamedChunkIdsPlugin((chunk) => {
-			// 解决异步模块打包的问题
-			if (chunk.name) {
-				return chunk.name;
-			}
-			// console.log(chunk);
-			// return chunk.modules.map(m => path.relative(m.context, m.request)).join("_");
+		// 使用chunkIds: "named"配置代替
+		// new webpack.ids.NamedChunkIdsPlugin((chunk) => {
+		// 	// 解决异步模块打包的问题
+		// 	if (chunk.name) {
+		// 		return chunk.name;
+		// 	}
+		// 	// console.log(chunk);
+		// 	// return chunk.modules.map(m => path.relative(m.context, m.request)).join("_");
+		// }),
+		new HtmlWebpackPlugin({
+			template: path.resolve(__dirname, '../', 'config/index.html'),
+			filename: path.resolve(__dirname, '../', `static/detail.html`),
+			title: configs.title,
+			chunks: ['detail', 'manifest'], //指定index页面需要的模块,
+			// inject:"head",
+			// minify: {
+			//     removeComments: true,
+			//     collapseWhitespace: true,
+			//     removeAttributeQuotes: true
+			// }
 		}),
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, '../', 'config/index.html'),
-			filename: path.resolve(__dirname, '../', `${configs.dest}static/index.html`),
+			filename: path.resolve(__dirname, '../', `static/index.html`),
 			title: configs.title,
-			chunks: ['verdor', 'manifest', 'main'], //指定index页面需要的模块,
+			chunks: ['index', 'manifest'], //指定index页面需要的模块,
 			// inject:"head",
 			// minify: {
 			//     removeComments: true,
@@ -100,24 +117,24 @@ let webpackConfig = merge(baseWebpackConfig, {
 		}),
 		//運用此插件后postcss的自动加css的前缀失效，应该与mini-css-extract-plugin有关 
 		//因为此插件为压缩cssde 作用但是mini-css-extract-plugin也有此功能，故暂时关闭此插件
-		new OptimizeCssAssetsPlugin({
-			assetNameRegExp: /\.css(\?\w+)?$/g,
-			cssProcessor: require('cssnano'),
-			cssProcessorOptions: {
-				discardComments: {
-					removeAll: true
-				},
-				safe: true /* 避免打包后修改z-index的问题 */
-			},
-			canPrint: true
-		}),
+		// new OptimizeCssAssetsPlugin({
+		// 	assetNameRegExp: /\.css(\?\w+)?$/g,
+		// 	cssProcessor: require('cssnano'),
+		// 	cssProcessorOptions: {
+		// 		discardComments: {
+		// 			removeAll: true
+		// 		},
+		// 		safe: true /* 避免打包后修改z-index的问题 */
+		// 	},
+		// 	canPrint: true
+		// }),
 		new PreloadWebpackPlugin({
 			rel: "prefetch",
 			as: 'script',
 			//包含了哪些chunk,默认值为"asyncChunks"
 			include: 'asyncChunks'
 		}),
-		new webpack.BannerPlugin('打包日期: ' + new Date()),
+		// new webpack.BannerPlugin('打包日期: ' + new Date()),
 		// new BundleAnalyzerPlugin()
 		// new ExtractAssetsFromIndex({
 		// 	cssHashLength:8,

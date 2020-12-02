@@ -5,6 +5,7 @@ const os = require('os');
 const {
 	VueLoaderPlugin
 } = require('vue-loader');
+const TerserPlugin = require("terser-webpack-plugin");
 const configs = require('./base');
 // const HappyPack = require('happypack'); //多线程打包
 const cssExport = require('./export.css.js');
@@ -25,7 +26,9 @@ let publicPath = configs.devServerPath;
 module.exports = {
 	target: ['web', 'es5'],
 	entry: {
-		'main': './src/main.js'
+		// 'main': './src/main.js'
+		'index': './src/page/index/index.js',
+		'detail': './src/page/detail/index.js'
 	},
 	output: {
 		filename: jsName,
@@ -89,11 +92,15 @@ module.exports = {
 				//     enforce: true,
 				// }
 			}
-
 		},
 		runtimeChunk: {
 			name: 'manifest'
 		},
+		minimize: true,
+    	minimizer: [new TerserPlugin({
+			parallel: true,
+			extractComments:false
+		})],
 	},
 	module: {
 		rules: [{

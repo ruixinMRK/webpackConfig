@@ -2,7 +2,6 @@
 /* eslint-disable */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require("path");
-const autoprefixer = require('autoprefixer')({});
 
 const isDev = process.env.NODE_ENV == 'dev';
 
@@ -12,11 +11,20 @@ module.exports = function (options, needPostCss = true) {
 	let cssLoader = ['css-loader'];
 	if (needPostCss) {
 		cssLoader.push({
-			loader: 'postcss-loader',
-			options: {
-				plugins: [autoprefixer]
-			}
-		});
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [
+                  [
+                    "autoprefixer",
+                    {
+                      // Options
+                    },
+                  ],
+                ],
+              },
+            },
+          });
 	}
 
 	function generateLoaders(loader, loaderOptions) { //生成loader
@@ -52,6 +60,5 @@ module.exports = function (options, needPostCss = true) {
 		// scss: generateLoaders('sass'),
 		// stylus: generateLoaders('stylus'),
 		// styl: generateLoaders('stylus'),
-		autoprefixer:autoprefixer
 	};
 };
